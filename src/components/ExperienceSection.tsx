@@ -1,80 +1,44 @@
-import React from "react";
-import type { WorkExperience } from "../data";
+import type { Experience } from "../data";
+import SectionTitle from "./SectionTitle";
 
-interface ExperienceSectionProps {
-  experience: WorkExperience[];
-  handleExpHeaderChange: (
-    id: string,
-    field: keyof Omit<WorkExperience, "id" | "bullets">,
-    value: string,
-  ) => void;
-  handleExpBulletChange: (id: string, index: number, value: string) => void;
-}
+type ExperienceSectionProps = {
+  experience: Experience[];
+};
 
 export default function ExperienceSection({
   experience,
-  handleExpHeaderChange,
-  handleExpBulletChange,
 }: ExperienceSectionProps) {
   return (
-    <div className="mb-5">
-      <h3 className="text-xs font-bold text-slate-900 tracking-wider uppercase border-b border-slate-300 pb-1 mb-3">
-        Work Experience
-      </h3>
-      {experience.map((job) => (
-        <div key={job.id} className="mb-4 text-xs">
-          <div className="flex justify-between items-baseline gap-2 font-medium">
-            <input
-              type="text"
-              value={job.company}
-              onChange={(e) =>
-                handleExpHeaderChange(job.id, "company", e.target.value)
-              }
-              className="bg-transparent font-bold text-slate-900 focus:outline-none flex-1"
-            />
-            <input
-              type="text"
-              value={job.timeline}
-              onChange={(e) =>
-                handleExpHeaderChange(job.id, "timeline", e.target.value)
-              }
-              className="bg-transparent text-slate-500 text-right w-40 font-semibold focus:outline-none"
-            />
-          </div>
-          <div className="flex justify-between items-baseline gap-2 text-slate-500 italic mb-1">
-            <input
-              type="text"
-              value={job.role}
-              onChange={(e) =>
-                handleExpHeaderChange(job.id, "role", e.target.value)
-              }
-              className="bg-transparent italic text-slate-600 focus:outline-none flex-1"
-            />
-            <input
-              type="text"
-              value={job.location}
-              onChange={(e) =>
-                handleExpHeaderChange(job.id, "location", e.target.value)
-              }
-              className="bg-transparent text-right w-40 focus:outline-none text-[11px]"
-            />
-          </div>
-          <ul className="list-disc list-outside ml-4 text-slate-600 space-y-1">
-            {job.bullets.map((bullet, i) => (
-              <li key={i}>
-                <input
-                  type="text"
-                  value={bullet}
-                  onChange={(e) =>
-                    handleExpBulletChange(job.id, i, e.target.value)
-                  }
-                  className="w-full bg-transparent focus:outline-none text-slate-600"
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
+    <section>
+      <SectionTitle>Work Experience</SectionTitle>
+
+      <div className="mt-3 space-y-5">
+        {experience.map((job) => (
+          <article key={job.id} className="break-inside-avoid">
+            <div className="flex items-start justify-between gap-6 border-t border-neutral-400 pt-2">
+              <div>
+                <h3 className="text-[14px] font-extrabold leading-tight text-neutral-900">
+                  {job.company}
+                </h3>
+                <p className="text-[14px] font-extrabold uppercase leading-tight text-neutral-900">
+                  {job.role}
+                </p>
+              </div>
+
+              <div className="min-w-[160px] text-right text-[13px] font-bold italic leading-tight text-neutral-800">
+                <p>{job.period}</p>
+                <p>{job.location}</p>
+              </div>
+            </div>
+
+            <ul className="mt-3 list-disc space-y-1 pl-7 text-[14px] leading-[1.35] text-neutral-900">
+              {job.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }

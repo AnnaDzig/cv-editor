@@ -1,68 +1,32 @@
-import React from "react";
-import type { TrainingCourse } from "../data";
+import type { Course } from "../data";
+import SectionTitle from "./SectionTitle";
 
-interface CoursesSectionProps {
-  courses: TrainingCourse[];
-  handleCourseChange: (
-    id: string,
-    field: keyof TrainingCourse,
-    value: string,
-  ) => void;
-}
+type CoursesSectionProps = {
+  courses: Course[];
+};
 
-export default function CoursesSection({
-  courses,
-  handleCourseChange,
-}: CoursesSectionProps) {
+export default function CoursesSection({ courses }: CoursesSectionProps) {
   return (
-    <div className="mb-5">
-      <h3 className="text-xs font-bold text-slate-900 tracking-wider uppercase border-b border-slate-300 pb-1 mb-2">
-        Schools & Courses
-      </h3>
-      <div className="space-y-1.5 text-xs text-slate-600">
+    <section className="break-inside-avoid">
+      <SectionTitle>Schools & Courses</SectionTitle>
+
+      <div className="mt-2 space-y-2">
         {courses.map((course) => (
           <div
             key={course.id}
-            className="flex justify-between items-baseline gap-2">
-            <div className="flex gap-1 items-center flex-1">
-              <span>•</span>
-              <input
-                type="text"
-                value={course.title}
-                onChange={(e) =>
-                  handleCourseChange(course.id, "title", e.target.value)
-                }
-                className="font-bold text-slate-800 bg-transparent focus:outline-none w-1/3"
-              />
-              <span className="text-slate-400">–</span>
-              <input
-                type="text"
-                value={course.provider}
-                onChange={(e) =>
-                  handleCourseChange(course.id, "provider", e.target.value)
-                }
-                className="text-slate-700 bg-transparent focus:outline-none w-1/3"
-              />
-              <input
-                type="text"
-                value={course.location}
-                onChange={(e) =>
-                  handleCourseChange(course.id, "location", e.target.value)
-                }
-                className="text-slate-400 italic bg-transparent focus:outline-none w-1/4"
-              />
+            className="grid grid-cols-[1fr_auto] gap-4 text-[14px] leading-tight">
+            <div>
+              <p className="font-bold text-neutral-900">
+                {course.school}
+                {course.location ? `, ${course.location}` : ""}
+              </p>
+              <p>{course.title}</p>
             </div>
-            <input
-              type="text"
-              value={course.timeline}
-              onChange={(e) =>
-                handleCourseChange(course.id, "timeline", e.target.value)
-              }
-              className="text-slate-400 text-right focus:outline-none w-32"
-            />
+
+            <p className="font-semibold text-neutral-800">{course.period}</p>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

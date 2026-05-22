@@ -1,17 +1,19 @@
-import React from "react";
+import SectionTitle from "./SectionTitle";
 
-export default function LanguagesSection() {
+type LanguagesSectionProps = {
+  languages: string[];
+};
+
+export default function LanguagesSection({ languages }: LanguagesSectionProps) {
   return (
-    <div>
-      <h3 className="text-xs font-bold text-slate-900 tracking-wider uppercase border-b border-slate-300 pb-1 mb-1.5">
-        Languages
-      </h3>
-      <p className="text-xs text-slate-600 leading-relaxed font-medium">
-        <strong>English:</strong> Fluent &nbsp;|&nbsp; <strong>Danish:</strong>{" "}
-        Intermediate &nbsp;|&nbsp; <strong>Ukrainian:</strong> Native
-        &nbsp;|&nbsp; <strong>Polish:</strong> Fluent &nbsp;|&nbsp;{" "}
-        <strong>Russian:</strong> Native
-      </p>
-    </div>
+    <section className="break-inside-avoid">
+      <SectionTitle>Languages</SectionTitle>
+
+      <div className="mt-2 grid grid-cols-2 gap-x-8 gap-y-1 text-[14px]">
+        {languages.map((language) => (
+          <p key={language}>{language}</p>
+        ))}
+      </div>
+    </section>
   );
 }

@@ -1,73 +1,43 @@
-import React from "react";
+import type { SkillGroup } from "../data";
+import SectionTitle from "./SectionTitle";
 
-interface SkillsSectionProps {
-  frontendSkills: string;
-  setFrontendSkills: (v: string) => void;
-  backendSkills: string;
-  setBackendSkills: (v: string) => void;
-  productSkills: string;
-  setProductSkills: (v: string) => void;
-  toolsSkills: string;
-  setToolsSkills: (v: string) => void;
-}
+type SkillsSectionProps = {
+  skills: SkillGroup[];
+};
 
-export default function SkillsSection({
-  frontendSkills,
-  setFrontendSkills,
-  backendSkills,
-  setBackendSkills,
-  productSkills,
-  setProductSkills,
-  toolsSkills,
-  setToolsSkills,
-}: SkillsSectionProps) {
+export default function SkillsSection({ skills }: SkillsSectionProps) {
   return (
-    <div className="mb-5">
-      <h3 className="text-xs font-bold text-slate-900 tracking-wider uppercase border-b border-slate-300 pb-1 mb-2">
-        Skills
-      </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-xs text-slate-600">
-        <div>
-          <span className="font-bold block text-slate-800">Frontend:</span>
-          <input
-            type="text"
-            value={frontendSkills}
-            onChange={(e) => setFrontendSkills(e.target.value)}
-            className="w-full bg-transparent focus:outline-none border-b border-transparent hover:border-slate-100 text-slate-600"
-          />
-        </div>
-        <div>
-          <span className="font-bold block text-slate-800">
-            Backend & Data:
-          </span>
-          <input
-            type="text"
-            value={backendSkills}
-            onChange={(e) => setBackendSkills(e.target.value)}
-            className="w-full bg-transparent focus:outline-none border-b border-transparent hover:border-slate-100 text-slate-600"
-          />
-        </div>
-        <div>
-          <span className="font-bold block text-slate-800">Product & UX:</span>
-          <input
-            type="text"
-            value={productSkills}
-            onChange={(e) => setProductSkills(e.target.value)}
-            className="w-full bg-transparent focus:outline-none border-b border-transparent hover:border-slate-100 text-slate-600"
-          />
-        </div>
-        <div>
-          <span className="font-bold block text-slate-800">
-            Tools & Workflow:
-          </span>
-          <input
-            type="text"
-            value={toolsSkills}
-            onChange={(e) => setToolsSkills(e.target.value)}
-            className="w-full bg-transparent focus:outline-none border-b border-transparent hover:border-slate-100 text-slate-600"
-          />
-        </div>
+    <section>
+      <SectionTitle>Skills</SectionTitle>
+
+      <div className="mt-2 space-y-3">
+        {skills.map((group) => (
+          <div key={group.id}>
+            <h3 className="text-[15px] font-extrabold uppercase text-neutral-900">
+              {group.title}
+            </h3>
+
+            <ul className="mt-1 list-disc space-y-1 pl-7 text-[14px] leading-[1.35] text-neutral-900">
+              {group.items.map((item) => {
+                const [label, value] = item.split(":");
+
+                return (
+                  <li key={item}>
+                    {value ? (
+                      <>
+                        <strong>{label}:</strong>
+                        {value}
+                      </>
+                    ) : (
+                      item
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
