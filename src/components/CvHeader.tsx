@@ -15,7 +15,7 @@ export default function CvHeader({ data }: CvHeaderProps) {
         />
       </div>
 
-      <div className="pt-1 pl-2">
+      <div className="py-1 pl-2">
         <p className="text-[20px] font-semibold tracking-[0.12em] text-[#173955]">
           {data.name}
         </p>

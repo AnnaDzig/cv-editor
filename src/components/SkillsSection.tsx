@@ -19,14 +19,14 @@ export default function SkillsSection({ skills }: SkillsSectionProps) {
 
             <ul className="mt-1 list-disc space-y-1 pl-7 text-[14px] leading-[1.35] text-neutral-900">
               {group.items.map((item) => {
-                const [label, value] = item.split(":");
+                const [label, ...rest] = item.split(":");
+                const value = rest.join(":").trim();
 
                 return (
                   <li key={item}>
                     {value ? (
                       <>
-                        <strong>{label}:</strong>
-                        {value}
+                        <strong>{label}:</strong> {value}
                       </>
                     ) : (
                       item
