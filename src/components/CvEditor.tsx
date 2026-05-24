@@ -83,6 +83,93 @@ export default function CvEditor({ data, setData }: CvEditorProps) {
       ),
     }));
   };
+  const updateExperienceField = (
+    experienceId: string,
+    field: "company" | "role" | "period" | "location",
+    value: string,
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      experience: prev.experience.map((job) =>
+        job.id === experienceId ? { ...job, [field]: value } : job,
+      ),
+    }));
+  };
+
+  const updateExperienceBullet = (
+    experienceId: string,
+    bulletIndex: number,
+    value: string,
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      experience: prev.experience.map((job) =>
+        job.id === experienceId
+          ? {
+              ...job,
+              bullets: job.bullets.map((bullet, index) =>
+                index === bulletIndex ? value : bullet,
+              ),
+            }
+          : job,
+      ),
+    }));
+  };
+
+  const addExperienceBullet = (experienceId: string) => {
+    setData((prev) => ({
+      ...prev,
+      experience: prev.experience.map((job) =>
+        job.id === experienceId
+          ? {
+              ...job,
+              bullets: [...job.bullets, "New responsibility or achievement."],
+            }
+          : job,
+      ),
+    }));
+  };
+
+  const removeExperienceBullet = (
+    experienceId: string,
+    bulletIndex: number,
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      experience: prev.experience.map((job) =>
+        job.id === experienceId
+          ? {
+              ...job,
+              bullets: job.bullets.filter((_, index) => index !== bulletIndex),
+            }
+          : job,
+      ),
+    }));
+  };
+
+  const addExperience = () => {
+    setData((prev) => ({
+      ...prev,
+      experience: [
+        ...prev.experience,
+        {
+          id: crypto.randomUUID(),
+          company: "New company",
+          role: "Job title",
+          period: "Month Year – Month Year",
+          location: "City, Country",
+          bullets: ["Describe your responsibility or achievement."],
+        },
+      ],
+    }));
+  };
+
+  const removeExperience = (experienceId: string) => {
+    setData((prev) => ({
+      ...prev,
+      experience: prev.experience.filter((job) => job.id !== experienceId),
+    }));
+  };
 
   const updateLanguage = (indexToUpdate: number, value: string) => {
     setData((prev) => ({
@@ -220,6 +307,112 @@ export default function CvEditor({ data, setData }: CvEditorProps) {
                 </button>
               </div>
             ))}
+          </div>
+        </EditorSection>
+        <EditorSection title="Work Experience">
+          <div className="space-y-5">
+            {data.experience.map((job, jobIndex) => (
+              <div
+                key={job.id}
+                className="rounded-xl border border-neutral-200 bg-neutral-50 p-3">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <h4 className="text-sm font-bold text-neutral-800">
+                    Experience #{jobIndex + 1}
+                  </h4>
+
+                  <button
+                    type="button"
+                    onClick={() => removeExperience(job.id)}
+                    className="rounded-full border border-red-200 px-3 py-1 text-xs font-semibold text-red-600 transition hover:bg-red-50">
+                    Remove job
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  <Input
+                    label="Company"
+                    value={job.company}
+                    onChange={(value) =>
+                      updateExperienceField(job.id, "company", value)
+                    }
+                  />
+
+                  <Input
+                    label="Role"
+                    value={job.role}
+                    onChange={(value) =>
+                      updateExperienceField(job.id, "role", value)
+                    }
+                  />
+
+                  <Input
+                    label="Period"
+                    value={job.period}
+                    onChange={(value) =>
+                      updateExperienceField(job.id, "period", value)
+                    }
+                  />
+
+                  <Input
+                    label="Location"
+                    value={job.location}
+                    onChange={(value) =>
+                      updateExperienceField(job.id, "location", value)
+                    }
+                  />
+
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-700">
+                      Bullet points
+                    </p>
+
+                    <div className="mt-2 space-y-2">
+                      {job.bullets.map((bullet, bulletIndex) => (
+                        <div
+                          key={`${job.id}-${bulletIndex}`}
+                          className="flex gap-2">
+                          <textarea
+                            value={bullet}
+                            onChange={(event) =>
+                              updateExperienceBullet(
+                                job.id,
+                                bulletIndex,
+                                event.target.value,
+                              )
+                            }
+                            rows={2}
+                            className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-[#173955] focus:ring-2 focus:ring-[#173955]/20"
+                          />
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              removeExperienceBullet(job.id, bulletIndex)
+                            }
+                            className="h-[42px] rounded-lg border border-red-200 px-3 text-sm font-semibold text-red-600 transition hover:bg-red-50">
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => addExperienceBullet(job.id)}
+                      className="mt-3 rounded-full border border-[#173955] px-4 py-1.5 text-sm font-semibold text-[#173955] transition hover:bg-[#173955] hover:text-white">
+                      Add bullet
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addExperience}
+              className="w-full rounded-full bg-[#173955] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#102a40]">
+              Add new experience
+            </button>
           </div>
         </EditorSection>
 
