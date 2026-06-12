@@ -1,4 +1,5 @@
 import type { CvData } from "../data";
+import BulkCvImport from "./BulkCvImport";
 
 type CvEditorProps = {
   data: CvData;
@@ -197,7 +198,7 @@ export default function CvEditor({ data, setData }: CvEditorProps) {
   return (
     <aside className="w-full rounded-2xl bg-white p-5 shadow-lg lg:w-[420px] print:hidden">
       <h2 className="text-xl font-bold text-neutral-900">Edit CV</h2>
-
+      <BulkCvImport data={data} setData={setData} />
       <div className="mt-5 space-y-6">
         <EditorSection title="Personal information">
           <Input

@@ -1,4 +1,5 @@
 import Photo from "./assets/me.png";
+
 export type SkillGroup = {
   id: string;
   title: string;
@@ -31,6 +32,7 @@ export type Education = {
 };
 
 export type CvData = {
+  fileName: string;
   name: string;
   title: string;
   location: string;
@@ -48,6 +50,8 @@ export type CvData = {
 };
 
 export const initialCvData: CvData = {
+  fileName: "anna-frontend-cv",
+
   name: "Anna Dzhyhota",
   title: "Frontend Software Engineer",
   location: "Denmark, Kolding, 6000",

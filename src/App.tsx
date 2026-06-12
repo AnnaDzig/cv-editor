@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useReactToPrint } from "react-to-print";
 import CvEditor from "./components/CvEditor";
 import CvPreview from "./components/CvPreview";
-import { initialCvData } from "./data";
-
-type CvData = typeof initialCvData;
+import { initialCvData, type CvData } from "./data";
+import { downloadCvJson, readCvJsonFile } from "./helpers/cvFileHelpers";
 
 type SavedCvVersion = {
   id: string;
@@ -17,16 +16,17 @@ export default function App() {
   const [cvData, setCvData] = useState<CvData>(() => {
     const savedData = localStorage.getItem("currentCvData");
 
-    return savedData ? JSON.parse(savedData) : initialCvData;
+    return savedData ? (JSON.parse(savedData) as CvData) : initialCvData;
   });
 
   const [savedVersions, setSavedVersions] = useState<SavedCvVersion[]>(() => {
     const saved = localStorage.getItem("savedCvVersions");
 
-    return saved ? JSON.parse(saved) : [];
+    return saved ? (JSON.parse(saved) as SavedCvVersion[]) : [];
   });
 
   const cvRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     localStorage.setItem("currentCvData", JSON.stringify(cvData));
@@ -38,7 +38,7 @@ export default function App() {
 
   const handlePrint = useReactToPrint({
     contentRef: cvRef,
-    documentTitle: `${cvData.name}-CV`,
+    documentTitle: `${cvData.fileName || cvData.name || "cv"}-CV`,
   });
 
   const handleSaveVersion = () => {
@@ -72,13 +72,35 @@ export default function App() {
     setCvData(initialCvData);
   };
 
+  const handleSaveEditableVersion = () => {
+    downloadCvJson(cvData);
+  };
+
+  const handleOpenEditableVersion = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    readCvJsonFile(
+      file,
+      (data) => {
+        setCvData(data);
+      },
+      (message) => {
+        alert(message);
+      },
+    );
+
+    event.target.value = "";
+  };
+
   return (
     <main className="min-h-screen bg-neutral-100 px-4 py-6">
       <div className="mx-auto mb-6 flex max-w-7xl items-center justify-between print:hidden">
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">CV Editor</h1>
           <p className="text-sm text-neutral-600">
-            Edit your CV and download it as PDF.
+            Edit your CV, save editable versions, and download it as PDF.
           </p>
         </div>
 
@@ -89,6 +111,28 @@ export default function App() {
             className="rounded-full border border-[#173955] px-6 py-2.5 text-sm font-semibold text-[#173955] transition hover:bg-[#173955] hover:text-white">
             Save version
           </button>
+
+          <button
+            type="button"
+            onClick={handleSaveEditableVersion}
+            className="rounded-full border border-neutral-700 px-6 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-700 hover:text-white">
+            Save editable JSON
+          </button>
+
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="rounded-full border border-neutral-700 px-6 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-700 hover:text-white">
+            Open saved JSON
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,application/json"
+            onChange={handleOpenEditableVersion}
+            className="hidden"
+          />
 
           <button
             type="button"
