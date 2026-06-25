@@ -137,6 +137,13 @@ export const initialCvData: CvData = {
   courses: [
     {
       id: crypto.randomUUID(),
+      school: "RS School",
+      title: "Frontend Development JS/FE 2025 Q3 (JavaScript)",
+      period: "Completed Apr 2026",
+      location: "Gdansk, Poland / Online",
+    },
+    {
+      id: crypto.randomUUID(),
       school: "CyberBionic Systematics",
       title: "C#/.NET Developer",
       period: "Oct 2024 – Apr 2025",
